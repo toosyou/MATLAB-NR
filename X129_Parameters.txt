@@ -1,0 +1,58 @@
+#---------------------------------------------------------------
+# major.min_l: Determin the minimal value of the length for a branch
+#---------------------------------------------------------------
+
+Minimal length = 4
+
+#---------------------------------------------------------------
+# major.len_fac: If branch length > major.min_l*major.len_fac, 
+# the score_length will be counted even the offspring generation/number are small
+#---------------------------------------------------------------
+
+Length factor = 1
+
+#---------------------------------------------------------------
+# major.max_lev: Upper limit for the offspring generation threshold
+#---------------------------------------------------------------
+
+Maximal level = 20
+
+#---------------------------------------------------------------
+# major.num_fac: Offspring number threshold = (offspring generation threshold)*major.num_fac
+#---------------------------------------------------------------
+
+Number factor = 3
+
+#---------------------------------------------------------------
+# Function types: Exponent in the POWER functions for scoring for level, number, and length
+#---------------------------------------------------------------
+
+Power Level = 1
+Power Numer = 1
+Power Length = 1
+
+#---------------------------------------------------------------
+# Path of the work directory  -- Don't use underline '_' in the paths
+#---------------------------------------------------------------
+
+Main Path = G:
+
+#---------------------------------------------------------------
+# FASTA result directory under the main path
+#---------------------------------------------------------------
+
+Results Path = TEST\FAST\
+AM Path = TEST\AM\
+
+#---------------------------------------------------------------
+# Min, max, and step for the output mask
+#---------------------------------------------------------------
+
+Mask Min = 0
+Mask Max = 50
+Mask Step = 50
+
+#---------------------------------------------------------------
+# Number of FAST Spectrum Cut
+#---------------------------------------------------------------
+Number of FAST Cut = 1
