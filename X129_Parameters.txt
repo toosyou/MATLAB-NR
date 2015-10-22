@@ -35,14 +35,14 @@ Power Length = 1
 # Path of the work directory  -- Don't use underline '_' in the paths
 #---------------------------------------------------------------
 
-Main Path = G:
+Main Path = D:
 
 #---------------------------------------------------------------
 # FASTA result directory under the main path
 #---------------------------------------------------------------
 
-Results Path = TEST\FAST\
-AM Path = TEST\AM\
+Results Path = TEST/FAST/
+AM Path = TEST/AM/
 
 #---------------------------------------------------------------
 # Min, max, and step for the output mask

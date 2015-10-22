@@ -7,7 +7,14 @@
 
 #include "neuro_retriever_allv3.h"
 
-#define winrar_x_ "\"C:\\Program Files\\WinRAR\\winrar.exe\" x "
+
+
+#if defined(_WIN32) || defined(_WIN64)
+#define RM_F "del/F "
+#define RD_SQ "rd/S/Q "
+#define DECOMPRESSING_GZ "winrar x "
+#define DECOMPRESSING_TAR "winrar x "
+#endif
 
 using namespace std;
 
@@ -96,29 +103,41 @@ int main()
         }
         cout << input_buffer <<endl;
         //extract .am.gz and .tar.gz
-        sys_comm_rar = string(winrar_x_) + Main_Path + string("\\") + AM_Path + input_buffer + string(".am.gz ") + Main_Path + string("\\") + AM_Path;
+        sys_comm_rar = string(DECOMPRESSING_GZ) + Main_Path + string("/") + AM_Path + input_buffer + string(".am.gz ") + Main_Path + string("/") + AM_Path ;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
-        sys_comm_rar = string(winrar_x_) + Main_Path + string("\\") + Results_Path + tline_gfp + string(".tar.gz ") + Main_Path + string("\\") + Results_Path;
+        sys_comm_rar = string(DECOMPRESSING_TAR) + Main_Path + string("/") + Results_Path + tline_gfp + string(".tar.gz ") + Main_Path + string("/") + Results_Path ;
         cout <<sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
 
         for(int i=0;i<1;++i){
             para.level = para0.level + i*0.5;
             for(int j=0;j<1;++j){
-                string Main_AM_Path = Main_Path + string("\\") + AM_Path;
+                string Main_AM_Path = Main_Path + string("/") + AM_Path;
                 para.length = para0.length + j*0.5;
                 neuro_retriever_allv3(Main_Path, Results_Path, Main_AM_Path,
                                       tline_gfp, major, para,
                                       mask_min, mask_max, mask_step);
             }
         }
-        sys_comm_rar = string("del/F ") + Main_Path + string("\\") + AM_Path + input_buffer + string(".am");
+#if defined(_WIN32) || defined(_WIN64)
+        string tmp_path = Main_Path + string("/") + AM_Path + input_buffer + string(".am");
+        for(int i=0;i<tmp_path.size();++i){
+            if(tmp_path[i] == '/')
+                tmp_path[i] = '\\';
+        }
+        sys_comm_rar = string(RM_F) + tmp_path;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
-        sys_comm_rar = string("rd/S/Q ") +Main_Path + string("\\") + Results_Path + tline_gfp;
+        tmp_path = Main_Path + string("/") + Results_Path + tline_gfp;
+        for(int i=0;i<tmp_path.size();++i){
+            if(tmp_path[i] == '/')
+                tmp_path[i] = '\\';
+        }
+        sys_comm_rar = string(RD_SQ) + tmp_path;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
+#endif
     }
     fid.close();
     return 0;

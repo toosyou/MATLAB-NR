@@ -59,9 +59,9 @@ void neuro_retriever_allv3(string Name_Path, string Results_Path, string Path_AM
     //tic
     clock_t c = clock();
 
-    string Path_Data = Name_Path + string("\\") + Results_Path;
+    string Path_Data = Name_Path + string("/") + Results_Path;
     vector<string> List_Neuron;
-    vector<string> Name_Neuron;
+    //vector<string> Name_Neuron;
     int n_file =0;
 
     sys_cd(Path_Data);
@@ -81,16 +81,8 @@ void neuro_retriever_allv3(string Name_Path, string Results_Path, string Path_AM
             LIFE_HISTOGRAM life_hist;
 
             n_file ++;
-            //Name_Neuron.push_back(List_Neuron[i]);//for no reason i think
 
             cout << endl << "Running " << n_file <<"-th neuron, name=" << List_Neuron[i] <<endl;
-
-            //mat_name = List_Neuron[i] + string(".mat");
-            //i gave up loading mat file because it requires matio-library which is a pain in the a**
-            /*if mat_name exists
-             *      load mat_name LTH
-             *                          */
-            //instead, always create LTH with read_alltrees_v2
 
             read_alltrees_v2(LTH);
 
@@ -109,7 +101,6 @@ void neuro_retriever_allv3(string Name_Path, string Results_Path, string Path_AM
             }
 
             lsm_name = Path_AM + List_Neuron[i]+string(".am");
-            //fpath = Path_Data + string("/") + List_Neuron[i];
             fpath = Path_Data + List_Neuron[i];
             voxel_life_mask_v6(LTH,major,para,
                                lsm_name,fpath,
@@ -207,8 +198,8 @@ void readtree_single(string foldername, sLTH &single_LTH){
     int n_lp =0;
     int n_ep =0;
 
-    fname = foldername + string("\\") + b;
-    bname = foldername + string("\\") + branch_file;
+    fname = foldername + string("/") + b;
+    bname = foldername + string("/") + branch_file;
 
     fstream fid(fname.c_str(),fstream::in);//info
     fstream bchid(bname.c_str(),fstream::in);
@@ -806,7 +797,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
             }
         }
     }
-    vector<int> loc = c_strfind(fpath,string("\\"));
+    vector<int> loc = c_strfind(fpath,string("/"));
     int st = loc[ loc.size()-1 ] +1 ;
 
     if(output_mask == 1){
@@ -817,7 +808,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
 //            str_time=strrep(str_time,':','-');
 
 
-            string outname = fpath + string("\\") + string(itoa(life_cut,dontcare_char,10)) + string("_") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
+            string outname = fpath + string("/") + string(itoa(life_cut,dontcare_char,10)) + string("_") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
             cout <<"outputing : " << outname <<endl;
             FILE* fout = fopen(outname.c_str(),"w");
             if(fout == NULL){
@@ -886,7 +877,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
     if(output_life == 1){
         cout << "Output the final results for life-index file...." <<endl;
 
-        string outname = fpath + string("\\life-") + string("_") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
+        string outname = fpath + string("/life-") + string("_") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
         cout <<"outputing : " << outname <<endl;
         FILE *fout = fopen(outname.c_str(),"w");
         if(fout == NULL){
@@ -946,12 +937,14 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
 
         fclose(fout);
     }
-
-    string sys_comm_rar = string(winrar_A_) + string(fpath.begin()+st , fpath.end()) + para_string + string(".rar *am");
+#if defined(_WIN32) || defined(_WIN64)
+    string sys_comm_rar = string("winrar A ") + string(fpath.begin()+st , fpath.end()) + para_string + string(".rar *am");
+    cout << sys_comm_rar <<endl;
     system(sys_comm_rar.c_str());
     system("copy *.rar ..\\NR_Results\\");
     system("del *.rar");
     system("del *.am");
+#endif
     return;
 }
 

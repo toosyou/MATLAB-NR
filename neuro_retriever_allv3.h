@@ -12,9 +12,8 @@
 #include <math.h>
 #include <cstdio>
 
-#define winrar_A_ "\"C:\\Program Files\\WinRAR\\winrar.exe\" A "
-
 using namespace std;
+
 
 template <class T>
 T vector_max(vector<T> &input){
