@@ -11,6 +11,12 @@
 #include <fstream>
 #include <math.h>
 #include <cstdio>
+#include <errno.h>
+#include <cstring>
+
+#if defined(__unix__)
+    #include <unistd.h>
+#endif
 
 using namespace std;
 

@@ -10,10 +10,15 @@
 
 
 #if defined(_WIN32) || defined(_WIN64)
-#define RM_F "del/F "
-#define RD_SQ "rd/S/Q "
-#define DECOMPRESSING_GZ "winrar x "
-#define DECOMPRESSING_TAR "winrar x "
+    #define RM_F "del/F "
+    #define RD_SQ "rd/S/Q "
+    #define DECOMPRESSING_GZ "winrar x "
+    #define DECOMPRESSING_TAR "winrar x "
+#elif defined(__unix__)
+    #define RM_F "rm -f "
+    #define RD_SQ "rm -rf "
+    #define DECOMPRESSING_GZ "gzip -d -k "
+    #define DECOMPRESSING_TAR "tar -xzf "
 #endif
 
 using namespace std;
@@ -103,12 +108,21 @@ int main()
         }
         cout << input_buffer <<endl;
         //extract .am.gz and .tar.gz
+#if defined(_WIN32) || defined(_WIN64)
         sys_comm_rar = string(DECOMPRESSING_GZ) + Main_Path + string("/") + AM_Path + input_buffer + string(".am.gz ") + Main_Path + string("/") + AM_Path ;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
         sys_comm_rar = string(DECOMPRESSING_TAR) + Main_Path + string("/") + Results_Path + tline_gfp + string(".tar.gz ") + Main_Path + string("/") + Results_Path ;
         cout <<sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
+#elif defined(__unix__)
+        sys_comm_rar = string(DECOMPRESSING_GZ) + Main_Path + string("/") + AM_Path + input_buffer + string(".am.gz ");
+        cout << sys_comm_rar <<endl;
+        system(sys_comm_rar.c_str());
+        sys_comm_rar = string(DECOMPRESSING_TAR) + Main_Path + string("/") + Results_Path + tline_gfp + string(".tar.gz -C ") + Main_Path + string("/") + Results_Path;
+        cout <<sys_comm_rar <<endl;
+        system(sys_comm_rar.c_str());
+#endif
 
         for(int i=0;i<1;++i){
             para.level = para0.level + i*0.5;
@@ -137,6 +151,15 @@ int main()
         sys_comm_rar = string(RD_SQ) + tmp_path;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
+#elif defined(__unix__)
+        string tmp_path = Main_Path + string("/") + AM_Path + input_buffer + string(".am");
+        sys_comm_rar = string(RM_F) + tmp_path;
+        cout << sys_comm_rar <<endl;
+        system(sys_comm_rar.c_str());
+        tmp_path = Main_Path + string("/") + Results_Path + tline_gfp;
+        sys_comm_rar = string(RD_SQ) + tmp_path;
+        cout << sys_comm_rar <<endl;
+        system(sys_comm_rar.c_str()); 
 #endif
     }
     fid.close();

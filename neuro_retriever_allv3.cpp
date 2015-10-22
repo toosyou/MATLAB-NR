@@ -1,5 +1,12 @@
 #include "neuro_retriever_allv3.h"
 
+#if defined(__unix__)
+    char* itoa(int input,char *buffer,int radix_notusing){
+        sprintf(buffer,"%d",input);
+        return buffer;
+    }
+#endif
+
 bool sLTH_cmp(sLTH a, sLTH b){
     return a.threshold < b.threshold;
 }
@@ -8,7 +15,7 @@ void getdir(string dir, vector<string> &files){
     DIR *dp;
     dirent *dirp;
     if((dp = opendir(dir.c_str()) ) == NULL){
-        cerr << "***** ERROR : " << errno <<" *****" <<endl;
+        cerr << "***** ERROR : cannot getdir *****" <<endl;
 		return;
     }
     while( (dirp = readdir(dp) ) != NULL ){
@@ -30,8 +37,10 @@ vector<int> c_strfind(string source,string target){
 
 int sys_cd(string path){
     int return_value = chdir(path.c_str());
-    if(return_value == -1)
-        cerr<< "***** ERROR : cannot change working directory to " << path <<endl;
+    if(return_value == -1){
+        cerr << "***** ERROR : cannot change working directory to " << path << " *****" <<endl;
+        cerr << strerror(errno) <<endl;
+    }
     //string cd_cmd = string("cd ") + path;
     //system(cd_cmd.c_str());
     return return_value;
@@ -944,6 +953,13 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
     system("copy *.rar ..\\NR_Results\\");
     system("del *.rar");
     system("del *.am");
+#elif defined(__unix__)
+    string sys_comm_rar = string("tar zcf ") + string(fpath.begin()+st , fpath.end()) + para_string + string(".tar.gz *am");
+    cout << sys_comm_rar <<endl;
+    system(sys_comm_rar.c_str());
+    system("mv *gz ../NR_Results/");
+    system("rm -f *gz");
+    system("rm -f *am");
 #endif
     return;
 }
