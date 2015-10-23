@@ -110,9 +110,15 @@ int main()
         //extract .am.gz and .tar.gz
 #if defined(_WIN32) || defined(_WIN64)
         sys_comm_rar = string(DECOMPRESSING_GZ) + Main_Path + string("/") + AM_Path + input_buffer + string(".am.gz ") + Main_Path + string("/") + AM_Path ;
+        for(int i=0;i<sys_comm_rar.size();++i)
+            if(sys_comm_rar[i] == '/')
+                sys_comm_rar[i] = '\\';
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
         sys_comm_rar = string(DECOMPRESSING_TAR) + Main_Path + string("/") + Results_Path + tline_gfp + string(".tar.gz ") + Main_Path + string("/") + Results_Path ;
+        for(int i=0;i<sys_comm_rar.size();++i)
+            if(sys_comm_rar[i] == '/')
+                sys_comm_rar[i] = '\\';
         cout <<sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
 #elif defined(__unix__)
