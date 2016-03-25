@@ -456,8 +456,11 @@ void readtree_single(string foldername, sLTH &single_LTH){
 void read_BID(string foldername,vector<int>& branch_id){
     string a(foldername.c_str(),foldername.size()-8);
     string b = a + string("-ID.am");
+#if defined(_WIN32) || defined(_WIN64)
     string fname = foldername + string("\\") + b;
-
+#elif defined(__unix__)
+    string fname = foldername + string("/") + b;
+#endif
     fstream fid(fname.c_str(),fstream::in);
     if(!fid.is_open()){
         cerr << "***** ERROR : cannot open " << fname << " *****" <<endl;
