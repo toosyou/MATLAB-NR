@@ -1,6 +1,6 @@
 #include "neuro_retriever_allv3.h"
 
-#if defined(__unix__)
+#if defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
     char* itoa(int input,char *buffer,int radix_notusing){
         sprintf(buffer,"%d",input);
         return buffer;
@@ -458,7 +458,7 @@ void read_BID(string foldername,vector<int>& branch_id){
     string b = a + string("-ID.am");
 #if defined(_WIN32) || defined(_WIN64)
     string fname = foldername + string("\\") + b;
-#elif defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
     string fname = foldername + string("/") + b;
 #endif
     fstream fid(fname.c_str(),fstream::in);
@@ -956,7 +956,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
     system("copy *.rar ..\\NR_Results\\");
     system("del *.rar");
     system("del *.am");
-#elif defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
     string sys_comm_rar = string("tar zcf ") + string(fpath.begin()+st , fpath.end()) + para_string + string(".tar.gz *am");
     cout << sys_comm_rar <<endl;
     system(sys_comm_rar.c_str());
@@ -1040,13 +1040,78 @@ void parent2level(vector<int> &parent, vector<int> &node_level){
     return;
 }
 
+int findNearestNeighbourIndex( float value, vector< float > &x )
+{
+    float dist = FLT_MAX;
+    int idx = -1;
+    for ( int i = 0; i < x.size(); ++i ) {
+        float newDist = value - x[i];
+        if ( newDist > 0 && newDist < dist ) {
+            dist = newDist;
+            idx = i;
+        }
+    }
+
+    return idx;
+}
+
+vector< float > interp1( vector< float > &x, vector< float > &y, vector< float > &x_new )
+{
+    vector< float > y_new;
+    y_new.reserve( x_new.size() );
+
+    std::vector< float > dx, dy, slope, intercept;
+    dx.reserve( x.size() );
+    dy.reserve( x.size() );
+    slope.reserve( x.size() );
+    intercept.reserve( x.size() );
+    for( int i = 0; i < x.size(); ++i ){
+        if( i < x.size()-1 )
+        {
+            dx.push_back( x[i+1] - x[i] );
+            dy.push_back( y[i+1] - y[i] );
+            slope.push_back( dy[i] / dx[i] );
+            intercept.push_back( y[i] - x[i] * slope[i] );
+        }
+        else
+        {
+            dx.push_back( dx[i-1] );
+            dy.push_back( dy[i-1] );
+            slope.push_back( slope[i-1] );
+            intercept.push_back( intercept[i-1] );
+        }
+    }
+
+    for ( int i = 0; i < x_new.size(); ++i )
+    {
+        int idx = findNearestNeighbourIndex( x_new[i], x );
+        y_new.push_back( slope[idx] * x_new[i] + intercept[idx] );
+
+    }
+
+}
+
 float quantile0(vector<int> &Z, float P){
     sort(Z.begin(),Z.end());// 1 2 3 4
-    float index_P = P * (float)Z.size();
-    float a = index_P - (float)(int)index_P;
-    float b = 1.0-a;
 
-    return (float)Z[(int)index_P+1] * a + (float)Z[(int)index_P ] * b;
+    vector<float> x;
+    vector<float> s;
+    vector<float> x_new(1, P);
+    //make x
+    x.push_back(0.0);
+    for(int i=0;i<Z.size();++i){
+        x.push_back( ( 0.5+(float)i ) / (float)Z.size() );
+    }
+    x.push_back(1.0);
+
+    //make s
+    s.push_back((float)Z.front());
+    for(int i=0;i<Z.size();++i){
+        s.push_back( (float)Z[i] );
+    }
+    s.push_back((float)Z.back());
+
+    return interp1( x, s, x_new)[0];
 }
 
 vector<float> major_br(float th, MAJOR &major){

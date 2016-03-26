@@ -14,7 +14,7 @@
     #define RD_SQ "rd/S/Q "
     #define DECOMPRESSING_GZ "winrar x "
     #define DECOMPRESSING_TAR "winrar x "
-#elif defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
     #define RM_F "rm -f "
     #define RD_SQ "rm -rf "
     #define DECOMPRESSING_GZ "gzip -d -k "
@@ -121,7 +121,7 @@ int main()
                 sys_comm_rar[i] = '\\';
         cout <<sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
-#elif defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
         sys_comm_rar = string(DECOMPRESSING_GZ) + Main_Path + string("/") + AM_Path + input_buffer + string(".am.gz ");
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
@@ -157,7 +157,7 @@ int main()
         sys_comm_rar = string(RD_SQ) + tmp_path;
         cout << sys_comm_rar <<endl;
         system(sys_comm_rar.c_str());
-#elif defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
         string tmp_path = Main_Path + string("/") + AM_Path + input_buffer + string(".am");
         sys_comm_rar = string(RM_F) + tmp_path;
         cout << sys_comm_rar <<endl;

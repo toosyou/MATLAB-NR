@@ -13,8 +13,9 @@
 #include <cstdio>
 #include <errno.h>
 #include <cstring>
+#include <cfloat>
 
-#if defined(__unix__)
+#if defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
     #include <unistd.h>
 #endif
 
