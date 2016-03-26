@@ -960,6 +960,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
     string sys_comm_rar = string("tar zcf ") + string(fpath.begin()+st , fpath.end()) + para_string + string(".tar.gz *am");
     cout << sys_comm_rar <<endl;
     system(sys_comm_rar.c_str());
+    system("mkdir ../NR_Results");
     system("mv *gz ../NR_Results/");
     system("rm -f *gz");
     system("rm -f *am");
