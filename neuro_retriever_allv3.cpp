@@ -889,7 +889,7 @@ void voxel_life_mask_v6(vector<sLTH> &LTH, MAJOR major, PARA para,
     if(output_life == 1){
         cout << "Output the final results for life-index file...." <<endl;
 
-        string outname = fpath + string("/life-") + string("_") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
+        string outname = fpath + string("/life-") + string(fpath.begin()+st , fpath.end()) + para_string + string(".am");
         cout <<"outputing : " << outname <<endl;
         FILE *fout = fopen(outname.c_str(),"w");
         if(fout == NULL){
