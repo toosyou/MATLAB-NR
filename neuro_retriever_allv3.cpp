@@ -1057,24 +1057,24 @@ int findNearestNeighbourIndex( float value, vector< float > &x )
 
 vector< float > interp1( vector< float > &x, vector< float > &y, vector< float > &x_new )
 {
+
     vector< float > y_new;
     y_new.reserve( x_new.size() );
 
-    std::vector< float > dx, dy, slope, intercept;
+    vector< float > dx, dy, slope, intercept;
     dx.reserve( x.size() );
     dy.reserve( x.size() );
     slope.reserve( x.size() );
     intercept.reserve( x.size() );
+
     for( int i = 0; i < x.size(); ++i ){
-        if( i < x.size()-1 )
-        {
+        if( i < x.size()-1 ){
             dx.push_back( x[i+1] - x[i] );
             dy.push_back( y[i+1] - y[i] );
             slope.push_back( dy[i] / dx[i] );
             intercept.push_back( y[i] - x[i] * slope[i] );
         }
-        else
-        {
+        else{
             dx.push_back( dx[i-1] );
             dy.push_back( dy[i-1] );
             slope.push_back( slope[i-1] );
@@ -1082,12 +1082,12 @@ vector< float > interp1( vector< float > &x, vector< float > &y, vector< float >
         }
     }
 
-    for ( int i = 0; i < x_new.size(); ++i )
-    {
+    for ( int i = 0; i < x_new.size(); ++i ){
         int idx = findNearestNeighbourIndex( x_new[i], x );
         y_new.push_back( slope[idx] * x_new[i] + intercept[idx] );
-
     }
+
+    return y_new;
 
 }
 
